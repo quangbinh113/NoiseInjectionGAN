@@ -1,0 +1,8 @@
+# https://github.com/Scintillare/AIGan
+# https://discuss.pytorch.org/t/from-torch-autograd-gradcheck-import-zero-gradients/127462
+
+
+#  torch
+setuptools==59.5.0
+advertorch==0.2.3
+
