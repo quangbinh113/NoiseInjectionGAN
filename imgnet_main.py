@@ -62,15 +62,17 @@ if __name__ == "__main__":
     trainset = datasets.ImageFolder(data_dir, transform=image_transforms['train'])  
     dataloader_train = DataLoader(trainset, batch_size, shuffle=True, drop_last=True)
 
-    aiGAN = AIGAN(device,
-                            model,
-                            model_num_labels,
-                            image_nc,
-                            stop_epoch,
-                            BOX_MIN,
-                            BOX_MAX,
-                            C_TRESH,
-                            dataset_name="imagenet",
-                            is_targeted=False)
+    aiGAN = AIGAN(
+        device,
+        model,
+        model_num_labels,
+        image_nc,
+        stop_epoch,
+        BOX_MIN,
+        BOX_MAX,
+        C_TRESH,
+        dataset_name="imagenet",
+        is_targeted=False
+    )
 
     aiGAN.train(dataloader_train, epochs)

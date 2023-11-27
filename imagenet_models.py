@@ -125,8 +125,6 @@ class UnetGenerator(nn.Module):
         return self.model(input)
 
 
-
-
 class ResnetGenerator(nn.Module):
     '''
     For 299*299 images.
