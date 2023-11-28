@@ -56,7 +56,7 @@ if __name__ == "__main__":
         # Add any other transformations your model might require
     ])
 
-    coco_dataset = CustomCocoDataset(
+    coco_dataset = CocoDetection(
         root='/kaggle/input/coco-2017-dataset/coco2017/train2017',
         annotation='/kaggle/input/coco-2017-dataset/coco2017/annotations/instances_train2017.json',
         transform=coco_transforms
