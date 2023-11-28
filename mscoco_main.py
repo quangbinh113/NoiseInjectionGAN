@@ -7,7 +7,7 @@ import torch.hub
 from torch.utils.data import Dataset
 from torchvision.datasets import CocoDetection
 
-from torchvision.transforms import Compose, Resize, CenterCrop, ToTensor
+from torchvision.transforms import Compose, Resize, CenterCrop, ToTensor, RandomResizedCrop, RandomHorizontalFlip, ColorJitter
 
 
 class CustomCocoDataset(Dataset):
@@ -56,13 +56,13 @@ if __name__ == "__main__":
     #     # Add any other transformations your model might require
     # ])
 
-    transform = transforms.Compose([
+    transform = Compose([
         # transforms.RandomResizedCrop(size=299),#, scale=(1., 1.0)
-        transforms.RandomResizedCrop(size=224),#, scale=(1., 1.0)
-        transforms.ColorJitter(0.3, 0.3, 0.2, 0.05),
+        RandomResizedCrop(size=224),#, scale=(1., 1.0)
+        ColorJitter(0.3, 0.3, 0.2, 0.05),
         # transforms.RandomRotation(degrees=15),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(),
+        RandomHorizontalFlip(),
+        ToTensor(),
         # transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)), #WARN don`t do it!!
     ])
 
