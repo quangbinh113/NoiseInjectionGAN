@@ -123,7 +123,9 @@ class AIGAN:
         elif dataset_name=="imagenet":
             from imagenet_models import PatchDiscriminator as Discriminator
             from imagenet_models import Resnet224Generator as Generator
-            
+        elif dataset_name=="coco":
+            from imagenet_models import PatchDiscriminator as Discriminator
+            from imagenet_models import Resnet224Generator as Generator
         else:
             raise NotImplementedError(
                 'dataset [%s] is not implemented' % dataset_name
@@ -158,6 +160,8 @@ class AIGAN:
         elif self.dataset_name == "cifar10":
             lr = 1e-4
         elif self.dataset_name == "imagenet":
+            lr = 10**(-5)
+        elif self.dataset_name == "coco":
             lr = 10**(-5)
         else:
             raise NotImplementedError(
@@ -276,6 +280,11 @@ class AIGAN:
                 alambda = 10.0#
                 alpha = 1.
                 beta = 0.5
+
+            elif self.dataset_name == "coco":
+                alambda = 10.0#
+                alpha = 1.
+                beta = 0.5
             else:
                 raise NotImplementedError('dataset [%s] is not implemented' % self.dataset_name)
             # tun 3 gia tri alpha alamda beta / 0.2 0.2 0.6 gia tri cang cao the hien quan trong cua loss
@@ -350,6 +359,13 @@ class AIGAN:
                 self.optimizer_D = torch.optim.Adam(
                     self.netDisc.parameters(), lr=10**(-7)
                 )
+            if epoch == 60 and self.dataset_name == "coco":
+                self.optimizer_G = torch.optim.Adam(
+                    self.netG.parameters(), lr=10**(-7)
+                )
+                self.optimizer_D = torch.optim.Adam(
+                    self.netDisc.parameters(), lr=10**(-7)
+                )
             if epoch == 200 and self.dataset_name == "mnist":
                 self.optimizer_G = torch.optim.Adam(
                     self.netG.parameters(), lr=0.00001
@@ -358,6 +374,13 @@ class AIGAN:
                     self.netDisc.parameters(), lr=0.00001
                 )
             if epoch == 200  and self.dataset_name == "imagenet":
+                self.optimizer_G = torch.optim.Adam(
+                    self.netG.parameters(), lr=10**(-9)
+                )
+                self.optimizer_D = torch.optim.Adam(
+                    self.netDisc.parameters(), lr=10**(-9)
+                )
+            if epoch == 200  and self.dataset_name == "coco":
                 self.optimizer_G = torch.optim.Adam(
                     self.netG.parameters(), lr=10**(-9)
                 )

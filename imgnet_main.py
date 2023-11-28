@@ -24,7 +24,7 @@ if __name__ == "__main__":
     # Define what device we are using
     print("CUDA Available: ",torch.cuda.is_available())
     device = torch.device("cuda" if (use_cuda and torch.cuda.is_available()) else "cpu")
-    data_dir = r'D:\'
+    data_dir = r'./imagenet'
     stop_epoch = 1
 
     image_transforms = {
