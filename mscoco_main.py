@@ -36,8 +36,8 @@ if __name__ == "__main__":
 
     # Load COCO dataset
     coco_dataset = datasets.CocoDetection(
-        root='./data/coco/train2017',
-        annFile='./data/coco/annotations/instances_train2017.json',
+        root='/kaggle/input/coco-2017-dataset/coco2017/train2017',
+        annFile='/kaggle/input/coco-2017-dataset/coco2017/annotations/instances_train2017.json',
         transform=transform
     )
     dataloader = DataLoader(

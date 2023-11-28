@@ -5,4 +5,4 @@
 #  torch
 setuptools==59.5.0
 advertorch==0.2.3
-
+pycocotools
