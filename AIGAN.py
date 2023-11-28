@@ -398,9 +398,10 @@ class AIGAN:
                 gc.collect()
                 if self.dataset_name == "coco":
                     images, labels = data[0], data[1]
+                    print(images, labels)
                 else:
                     images, labels = data
-                    
+
                 images, labels = images.to(self.device), labels.to(self.device)
                 
                 # # if targeted, create one hot vectors of the target
