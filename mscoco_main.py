@@ -30,8 +30,13 @@ if __name__ == "__main__":
 
     # Transformations for the COCO dataset
     transform = transforms.Compose([
+        # transforms.RandomResizedCrop(size=299),#, scale=(1., 1.0)
+        transforms.RandomResizedCrop(size=224),#, scale=(1., 1.0)
+        transforms.ColorJitter(0.3, 0.3, 0.2, 0.05),
+        # transforms.RandomRotation(degrees=15),
+        transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
-        transforms.Resize((416, 416)),  # Resize images to fit YOLO input
+        # transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)), #WARN don`t do it!!
     ])
 
     # Load COCO dataset
