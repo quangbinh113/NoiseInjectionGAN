@@ -56,14 +56,9 @@ if __name__ == "__main__":
     #     # Add any other transformations your model might require
     # ])
 
-    transform = Compose([
-        # transforms.RandomResizedCrop(size=299),#, scale=(1., 1.0)
-        RandomResizedCrop(size=224),#, scale=(1., 1.0)
-        ColorJitter(0.3, 0.3, 0.2, 0.05),
-        # transforms.RandomRotation(degrees=15),
-        RandomHorizontalFlip(),
-        ToTensor(),
-        # transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)), #WARN don`t do it!!
+    coco_transforms = transforms.Compose([
+        transforms.Resize((224, 224)),  # Resize the image
+        transforms.ToTensor()           # Convert the image to a PyTorch tensor
     ])
 
     coco_dataset = CocoDetection(
@@ -72,7 +67,14 @@ if __name__ == "__main__":
         transform=transforms
     )
 
-    coco_dataset = CustomCocoDataset(coco_dataset)
+    coco_dataloader = DataLoader(
+        coco_dataset, 
+        batch_size=batch_size, 
+        shuffle=True, 
+        num_workers=1, 
+        drop_last=True
+    )
+
 
     # Transformations for the COCO dataset
 
@@ -83,14 +85,6 @@ if __name__ == "__main__":
     #     annotation='/kaggle/input/coco-2017-dataset/coco2017/annotations/instances_train2017.json',
     #     transform=transform
     # )
-
-    dataloader = DataLoader(
-        coco_dataset, 
-        batch_size=batch_size, 
-        shuffle=True,  
-        drop_last=True,
-
-    )
 
     print("Training image examples: ", len(coco_dataset))
 
@@ -106,4 +100,4 @@ if __name__ == "__main__":
         dataset_name="coco",
         is_targeted=False)
 
-    aiGAN.train(dataloader, epochs)
+    aiGAN.train(coco_dataloader, epochs)
