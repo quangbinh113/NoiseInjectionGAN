@@ -48,8 +48,7 @@ if __name__ == "__main__":
     dataloader = DataLoader(
         coco_dataset, 
         batch_size=batch_size, 
-        shuffle=True, 
-        num_workers=1, 
+        shuffle=True,  
         drop_last=True
     )
 
