@@ -6,6 +6,21 @@ from AIGAN import AIGAN
 import torch.hub
 from torch.utils.data import Dataset
 from torchvision.datasets import CocoDetection
+import json
+
+def preprocess_coco_annotations(annotation, num_classes):
+    # Check if annotation is a string and convert it to a list of dictionaries
+    if isinstance(annotation, str):
+        annotation = json.loads(annotation)
+
+    labels = []
+    for ann in annotation:
+        if 'category_id' in ann:
+            labels.append(ann['category_id'])
+        else:
+            labels.append(0)  # Default label if no category_id is present
+    return torch.tensor(labels)
+
 
 
 class CustomCocoDataset(Dataset):
@@ -21,18 +36,6 @@ class CustomCocoDataset(Dataset):
     def __len__(self):
         return len(self.coco)
 
-
-def preprocess_coco_annotations(annotations, num_classes):
-    # Convert annotations to a list of labels
-    labels = []
-    for ann in annotations:
-        if len(ann) > 0:  # Check if there are annotations available
-            # Extract category IDs and use them as labels
-            category_ids = [item['category_id'] for item in ann]
-            labels.append(category_ids[0])  # Take the first category as label, for simplicity
-        else:
-            labels.append(0)  # Default label if no annotation is present
-    return torch.tensor(labels)
 
 
 if __name__ == "__main__":
