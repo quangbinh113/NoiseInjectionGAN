@@ -4,6 +4,36 @@ import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from AIGAN import AIGAN
 import torch.hub
+from torch.utils.data import Dataset
+from torchvision.datasets import CocoDetection
+
+
+class CustomCocoDataset(Dataset):
+    def __init__(self, root, annotation, transform=None, num_classes=80):
+        self.coco = CocoDetection(root=root, annFile=annotation, transform=transform)
+        self.num_classes = num_classes
+
+    def __getitem__(self, idx):
+        image, annotation = self.coco[idx]
+        label = preprocess_coco_annotations(annotation, self.num_classes)
+        return image, label
+
+    def __len__(self):
+        return len(self.coco)
+
+
+def preprocess_coco_annotations(annotations, num_classes):
+    # Convert annotations to a list of labels
+    labels = []
+    for ann in annotations:
+        if len(ann) > 0:  # Check if there are annotations available
+            # Extract category IDs and use them as labels
+            category_ids = [item['category_id'] for item in ann]
+            labels.append(category_ids[0])  # Take the first category as label, for simplicity
+        else:
+            labels.append(0)  # Default label if no annotation is present
+    return torch.tensor(labels)
+
 
 if __name__ == "__main__":
     use_cuda=True
@@ -40,11 +70,12 @@ if __name__ == "__main__":
     ])
 
     # Load COCO dataset
-    coco_dataset = datasets.CocoDetection(
+    coco_dataset = CustomCocoDataset(
         root='/kaggle/input/coco-2017-dataset/coco2017/train2017',
         annFile='/kaggle/input/coco-2017-dataset/coco2017/annotations/instances_train2017.json',
         transform=transform
     )
+
     dataloader = DataLoader(
         coco_dataset, 
         batch_size=batch_size, 
