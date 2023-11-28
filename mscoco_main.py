@@ -6,35 +6,23 @@ from AIGAN import AIGAN
 import torch.hub
 from torch.utils.data import Dataset
 from torchvision.datasets import CocoDetection
-import json
 
-def preprocess_coco_annotations(annotation, num_classes):
-    # Check if annotation is a string and convert it to a list of dictionaries
-    if isinstance(annotation, str):
-        annotation = json.loads(annotation)
-
-    labels = []
-    for ann in annotation:
-        if 'category_id' in ann:
-            labels.append(ann['category_id'])
-        else:
-            labels.append(0)  # Default label if no category_id is present
-    return torch.tensor(labels)
-
+from torchvision.transforms import Compose, Resize, CenterCrop, ToTensor
 
 
 class CustomCocoDataset(Dataset):
-    def __init__(self, root, annotation, transform=None, num_classes=80):
-        self.coco = CocoDetection(root=root, annFile=annotation, transform=transform)
-        self.num_classes = num_classes
+    def __init__(self, coco_dataset):
+        self.coco_dataset = coco_dataset
 
     def __getitem__(self, idx):
-        image, annotation = self.coco[idx]
-        label = preprocess_coco_annotations(annotation, self.num_classes)
+        image, annotation = self.coco_dataset[idx]
+        # Extract label from annotation
+        # For simplicity, let's say we take the category ID of the first object in each image
+        label = annotation[0]['category_id'] if len(annotation) > 0 else 0
         return image, label
 
     def __len__(self):
-        return len(self.coco)
+        return len(self.coco_dataset)
 
 
 
@@ -61,23 +49,38 @@ if __name__ == "__main__":
     model_num_labels = 80  # Number of classes in COCO dataset
     stop_epoch = 10
 
-    # Transformations for the COCO dataset
-    transform = transforms.Compose([
-        # transforms.RandomResizedCrop(size=299),#, scale=(1., 1.0)
-        transforms.RandomResizedCrop(size=224),#, scale=(1., 1.0)
-        transforms.ColorJitter(0.3, 0.3, 0.2, 0.05),
-        # transforms.RandomRotation(degrees=15),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(),
-        # transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)), #WARN don`t do it!!
+    # Define transformations for MSCOCO
+    coco_transforms = Compose([
+        Resize((224, 224)),  # Resize the image to 224x224 (or any size your model expects)
+        ToTensor(),  # Convert the image to a PyTorch tensor
+        # Add any other transformations your model might require
     ])
 
-    # Load COCO dataset
     coco_dataset = CustomCocoDataset(
         root='/kaggle/input/coco-2017-dataset/coco2017/train2017',
         annotation='/kaggle/input/coco-2017-dataset/coco2017/annotations/instances_train2017.json',
-        transform=transform
+        transform=coco_transforms
     )
+
+    coco_dataset = CustomCocoDataset(coco_dataset)
+
+    # Transformations for the COCO dataset
+    # transform = transforms.Compose([
+    #     # transforms.RandomResizedCrop(size=299),#, scale=(1., 1.0)
+    #     transforms.RandomResizedCrop(size=224),#, scale=(1., 1.0)
+    #     transforms.ColorJitter(0.3, 0.3, 0.2, 0.05),
+    #     # transforms.RandomRotation(degrees=15),
+    #     transforms.RandomHorizontalFlip(),
+    #     transforms.ToTensor(),
+    #     # transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)), #WARN don`t do it!!
+    # ])
+
+    # # Load COCO dataset
+    # coco_dataset = CustomCocoDataset(
+    #     root='/kaggle/input/coco-2017-dataset/coco2017/train2017',
+    #     annotation='/kaggle/input/coco-2017-dataset/coco2017/annotations/instances_train2017.json',
+    #     transform=transform
+    # )
 
     dataloader = DataLoader(
         coco_dataset, 
