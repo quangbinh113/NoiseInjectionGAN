@@ -396,7 +396,11 @@ class AIGAN:
             fake_acc_sum = 0
             for i, data in tqdm(enumerate(train_dataloader, start=0)):
                 gc.collect()
-                images, labels = data
+                if self.dataset_name == "coco":
+                    images, labels = data[0], data[1]
+                else:
+                    images, labels = data
+                    
                 images, labels = images.to(self.device), labels.to(self.device)
                 
                 # # if targeted, create one hot vectors of the target
