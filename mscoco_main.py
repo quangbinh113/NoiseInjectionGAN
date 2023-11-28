@@ -87,7 +87,7 @@ if __name__ == "__main__":
         batch_size=batch_size, 
         shuffle=True,  
         drop_last=True,
-        collate_fn=lambda x: x 
+
     )
 
     print("Training image examples: ", len(coco_dataset))
