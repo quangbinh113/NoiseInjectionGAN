@@ -2,7 +2,7 @@ import torch
 import torchvision.datasets as datasets
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
-from AIGAN import AIGAN
+# from AIGAN import AIGAN
 import torch.hub
 from torch.utils.data import Dataset
 from torchvision.datasets import CocoDetection
@@ -92,16 +92,16 @@ if __name__ == "__main__":
 
     print("Training image examples: ", len(coco_dataset))
 
-    aiGAN = AIGAN(
-        device,
-        yolo_model,
-        model_num_labels,
-        image_nc,
-        stop_epoch,
-        BOX_MIN,
-        BOX_MAX,
-        C_TRESH,
-        dataset_name="coco",
-        is_targeted=False)
+    # aiGAN = AIGAN(
+    #     device,
+    #     yolo_model,
+    #     model_num_labels,
+    #     image_nc,
+    #     stop_epoch,
+    #     BOX_MIN,
+    #     BOX_MAX,
+    #     C_TRESH,
+    #     dataset_name="coco",
+    #     is_targeted=False)
 
-    aiGAN.train(dataloader, epochs)
+    # aiGAN.train(dataloader, epochs)
