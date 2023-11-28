@@ -72,7 +72,8 @@ if __name__ == "__main__":
         batch_size=batch_size, 
         shuffle=True, 
         num_workers=1, 
-        drop_last=True
+        drop_last=True,
+        collate_fn=lambda x: x 
     )
 
 
