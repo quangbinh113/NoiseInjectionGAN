@@ -2,7 +2,7 @@ import torch
 import torchvision.datasets as datasets
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
-# from AIGAN import AIGAN
+from AIGAN import AIGAN
 import torch.hub
 from torch.utils.data import Dataset
 from torchvision.datasets import CocoDetection
