@@ -50,30 +50,32 @@ if __name__ == "__main__":
     stop_epoch = 10
 
     # Define transformations for MSCOCO
-    coco_transforms = Compose([
-        Resize((224, 224)),  # Resize the image to 224x224 (or any size your model expects)
-        ToTensor(),  # Convert the image to a PyTorch tensor
-        # Add any other transformations your model might require
+    # coco_transforms = Compose([
+    #     Resize((224, 224)),  # Resize the image to 224x224 (or any size your model expects)
+    #     ToTensor(),  # Convert the image to a PyTorch tensor
+    #     # Add any other transformations your model might require
+    # ])
+
+    transform = transforms.Compose([
+        # transforms.RandomResizedCrop(size=299),#, scale=(1., 1.0)
+        transforms.RandomResizedCrop(size=224),#, scale=(1., 1.0)
+        transforms.ColorJitter(0.3, 0.3, 0.2, 0.05),
+        # transforms.RandomRotation(degrees=15),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        # transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)), #WARN don`t do it!!
     ])
 
     coco_dataset = CocoDetection(
         root='/kaggle/input/coco-2017-dataset/coco2017/train2017',
         annFile='/kaggle/input/coco-2017-dataset/coco2017/annotations/instances_train2017.json',
-        transform=coco_transforms
+        transform=transforms
     )
 
     coco_dataset = CustomCocoDataset(coco_dataset)
 
     # Transformations for the COCO dataset
-    # transform = transforms.Compose([
-    #     # transforms.RandomResizedCrop(size=299),#, scale=(1., 1.0)
-    #     transforms.RandomResizedCrop(size=224),#, scale=(1., 1.0)
-    #     transforms.ColorJitter(0.3, 0.3, 0.2, 0.05),
-    #     # transforms.RandomRotation(degrees=15),
-    #     transforms.RandomHorizontalFlip(),
-    #     transforms.ToTensor(),
-    #     # transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)), #WARN don`t do it!!
-    # ])
+
 
     # # Load COCO dataset
     # coco_dataset = CustomCocoDataset(
@@ -92,16 +94,16 @@ if __name__ == "__main__":
 
     print("Training image examples: ", len(coco_dataset))
 
-    # aiGAN = AIGAN(
-    #     device,
-    #     yolo_model,
-    #     model_num_labels,
-    #     image_nc,
-    #     stop_epoch,
-    #     BOX_MIN,
-    #     BOX_MAX,
-    #     C_TRESH,
-    #     dataset_name="coco",
-    #     is_targeted=False)
+    aiGAN = AIGAN(
+        device,
+        yolo_model,
+        model_num_labels,
+        image_nc,
+        stop_epoch,
+        BOX_MIN,
+        BOX_MAX,
+        C_TRESH,
+        dataset_name="coco",
+        is_targeted=False)
 
-    # aiGAN.train(dataloader, epochs)
+    aiGAN.train(dataloader, epochs)
